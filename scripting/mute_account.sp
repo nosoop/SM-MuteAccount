@@ -10,7 +10,7 @@
 #pragma newdecls required
 #include <stocksoup/log_server>
 
-#define PLUGIN_VERSION "0.0.0"
+#define PLUGIN_VERSION "0.0.1"
 public Plugin myinfo = {
 	name = "Mute Player By Account",
 	author = "nosoop",
@@ -93,22 +93,37 @@ public Action AdminCmd_MuteID(int client, int argc) {
 		return Plugin_Handled;
 	}
 	
-	char time[8], authid[32], reason[128];
-	GetCmdArg(1, time, sizeof(time));
-	GetCmdArg(2, authid, sizeof(authid));
+	// implemented from basebans.sp
+	char time[50], authid[50], arg_string[256];
 	
-	if (argc > 2) {
-		GetCmdArg(3, reason, sizeof(reason));
-	} else {
-		strcopy(reason, sizeof(reason), "no reason specified");
+	GetCmdArgString(arg_string, sizeof(arg_string));
+	
+	int len, total_len;
+	
+	/* get time */
+	if ((len = BreakString(arg_string, time, sizeof(time))) == -1) {
+		char command[64];
+		GetCmdArg(0, command, sizeof(command));
+		ReplyToCommand(client, "Usage: %s <time> <steamid> [reason]", command);
+		return Plugin_Handled;
 	}
+	total_len += len;
+	
+	if ((len = BreakString(arg_string[total_len], authid, sizeof(authid))) != -1) {
+		total_len += len;
+	} else {
+		total_len = 0;
+		arg_string[0] = '\0';
+	}
+	
 	
 	int account = GetAccountIDFromAuthID(authid, AuthId_Steam3);
 	if (account) {
 		int nMinutes = StringToInt(time);
-		MuteByAccountID(account, nMinutes, reason, client);
+		MuteByAccountID(account, nMinutes, arg_string[total_len], client);
 		
-		LogAction(client, -1, "\"%L\" added a mute on accountid %d", client, account);
+		LogAction(client, -1, "\"%L\" added ban (minutes \"%d\") (id \"%s\") (reason \"%s\")",
+				client, nMinutes, authid, arg_string[total_len]);
 	}
 	return Plugin_Handled;
 }
