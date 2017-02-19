@@ -8,9 +8,8 @@
 #include <basecomm>
 
 #pragma newdecls required
-#include <stocksoup/log_server>
 
-#define PLUGIN_VERSION "0.0.1"
+#define PLUGIN_VERSION "0.0.2"
 public Plugin myinfo = {
 	name = "Mute Player By Account",
 	author = "nosoop",
@@ -81,7 +80,7 @@ public void OnQueriedClientMute(Database database, DBResultSet results, const ch
 public void OnClientPutInServer(int client) {
 	if (g_bClientMuted[client]) {
 		BaseComm_SetClientMute(client, true);
-		LogServer("Client %N joined with mute in effect, muting", client);
+		LogAction(0, client, "Muted \"%L\" for an unfinished mute punishment.", client);
 	}
 }
 
@@ -122,7 +121,7 @@ public Action AdminCmd_MuteID(int client, int argc) {
 		int nMinutes = StringToInt(time);
 		MuteByAccountID(account, nMinutes, arg_string[total_len], client);
 		
-		LogAction(client, -1, "\"%L\" added ban (minutes \"%d\") (id \"%s\") (reason \"%s\")",
+		LogAction(client, -1, "\"%L\" added mute (minutes \"%d\") (id \"%s\") (reason \"%s\")",
 				client, nMinutes, authid, arg_string[total_len]);
 	}
 	return Plugin_Handled;
