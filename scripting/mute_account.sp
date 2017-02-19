@@ -9,7 +9,7 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "0.0.2"
+#define PLUGIN_VERSION "0.0.3"
 public Plugin myinfo = {
 	name = "Mute Player By Account",
 	author = "nosoop",
@@ -115,8 +115,13 @@ public Action AdminCmd_MuteID(int client, int argc) {
 		arg_string[0] = '\0';
 	}
 	
+	int account;
+	if (!strncmp(authid, "STEAM_", 6) && authid[7] == ':') {
+		account = GetAccountIDFromAuthID(authid, AuthId_Steam2);
+	} else if (!strncmp(authid, "[U:", 3)) {
+		account = GetAccountIDFromAuthID(authid, AuthId_Steam3);
+	}
 	
-	int account = GetAccountIDFromAuthID(authid, AuthId_Steam3);
 	if (account) {
 		int nMinutes = StringToInt(time);
 		MuteByAccountID(account, nMinutes, arg_string[total_len], client);
