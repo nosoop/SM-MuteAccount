@@ -1,5 +1,7 @@
 /**
- * Sourcemod 1.7 Plugin Template
+ * Mute Player By Account
+ * 
+ * A basic plugin to apply player mutes by Steam account.  Similar syntax to `sm_addban`.
  */
 #pragma semicolon 1
 #include <sourcemod>
@@ -33,6 +35,7 @@ public void OnPluginStart() {
 		SetFailState("Could not connect to muted_accounts database: %s", error);
 	}
 	
+	// TODO support start_time?
 	g_AddMuteQuery = SQL_PrepareQuery(g_Database,
 			"INSERT INTO mutelist (account, end_time, reason, admin_account) VALUES (?, ?, ?, ?);",
 			error, sizeof(error));
