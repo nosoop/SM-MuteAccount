@@ -1,6 +1,6 @@
 # Mute Player By Account
 
-Allows players to be muted by Steam account, kind of like `banid` or `sm_addban`.  Simple database, too.
+Allows players to be muted by Steam account; basically the mute equivalent of `sm_addban`.  Simple database, too.
 
 ## Installation
 
