@@ -11,7 +11,7 @@
 
 #pragma newdecls required
 
-#define PLUGIN_VERSION "0.0.3"
+#define PLUGIN_VERSION "0.0.4"
 public Plugin myinfo = {
 	name = "Mute Player By Account",
 	author = "nosoop",
