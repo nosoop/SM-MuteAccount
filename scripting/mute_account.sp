@@ -60,8 +60,8 @@ public void OnClientAuthorized(int client) {
 	
 	// note: unsafe on and after 19 January 2038
 	char query[1024];
-	Format(query, sizeof(query),
-			"SELECT account FROM mutelist WHERE account = %d AND end_time > %d OR end_time = 0",
+	Format(query, sizeof(query), "SELECT account FROM mutelist "
+			... "WHERE account = %d AND (end_time > %d OR end_time = 0) LIMIT 1",
 			account, GetTime());
 	
 	g_Database.Query(OnQueriedClientMute, query, GetClientUserId(client));
@@ -71,7 +71,7 @@ public void OnQueriedClientMute(Database database, DBResultSet results, const ch
 		int userid) {
 	int client = GetClientOfUserId(userid);
 	
-	if (client && results && results.RowCount > 0) {
+	if (client && results && results.RowCount) {
 		g_bClientMuted[client] = true;
 		
 		if (IsClientInGame(client)) {
